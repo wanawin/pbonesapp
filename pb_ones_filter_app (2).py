@@ -337,7 +337,7 @@ hide_zero = st.sidebar.checkbox("Hide filters with 0 initial cuts", value=True)
 
 # Validate seed
 header_col, = st.columns([1])
-st.markdown("## 🎯 Powerball Ones Filter App")
+st.markdown("## 🎯 Ones Filter App")
 if len(seed) != 5 or any(ch not in DIGITS for ch in seed):
     st.info("Enter a valid **Draw 1-back** (exactly 5 digits in 0–6) to begin.")
     st.stop()
