@@ -18,7 +18,7 @@ ZONE_FILTER_CSV_CANDIDATES = [
 # -----------------------------
 # Constants
 # -----------------------------
-DIGITS = "0123456789"  # tens-only model
+DIGITS = "0123456789"  # ones-only model
 LOW_SET = {0, 1, 2, 3, 4}
 HIGH_SET = {5, 6, 7, 8, 9}
 
