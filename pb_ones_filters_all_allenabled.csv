@@ -1,5 +1,0 @@
-id,name,enabled,applicable_if,expression
-PB_ONES_KEEP_P10_P90,Eliminate if Ones-Sum NOT in P10–P90 (15–29),True,,not (15 <= ones_sum <= 29)
-PB_ONES_KEEP_P20_P80,"Eliminate if Ones-Sum NOT in P20–P80 (17–27) (tighter, optional)",True,,not (17 <= ones_sum <= 27)
-PB_ONES_LOWTAIL_LT_P10,Eliminate if Ones-Sum < P10 (15),True,,(ones_sum < 15)
-PB_ONES_HIGHTAIL_GT_P90,Eliminate if Ones-Sum > P90 (29),True,,(ones_sum > 29)
