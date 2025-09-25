@@ -1,5 +1,0 @@
-id,name,applicable,eliminated,elim_rate
-PB_ONES_UNIQUE_LT3,Eliminate if Ones-Unique < 3 (very rare),154,1,0.006493506493506494
-NO367F550_ONES,DNUEliminate if combo contains mirror digits and has fewer than 4 digits ≤ 4 [ones-adapted],154,0,0.0
-346F551_ONES,DNUEliminate if combo contains mirror digits and not all digits are odd [ones-adapted],154,0,0.0
-PB_ONES_MAX_TWO_PAIRS,Eliminate if more than two distinct pairs (rare/degenerate),154,0,0.0
