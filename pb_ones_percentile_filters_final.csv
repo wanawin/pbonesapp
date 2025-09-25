@@ -1,0 +1,5 @@
+name,sums,coverage,rule
+Core Keep (Always),1,~46%,Always keep
+Expanded Mid,,~0%,Keep
+Edge (Optional),0,~31%,Optional
+Outlier (Trim),2-9,~23%,Trim
