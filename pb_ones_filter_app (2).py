@@ -20,7 +20,7 @@ ZONE_FILTER_CSV_CANDIDATES = [
 # -----------------------------
 DIGITS = "0123456789"  # tens-only model
 LOW_SET = {0, 1, 2, 3, 4}
-HIGH_SET = {5, 6}
+HIGH_SET = {5, 6, 7, 8, 9}
 
 # -----------------------------
 # Utilities
@@ -106,7 +106,7 @@ def sum_category(total: int) -> str:
 
 def gen_raw_combos(seed: str, method: str) -> list[str]:
     """
-    Return raw combos (with duplicates) as sorted-5-char strings of tens digits (0..6).
+    Return raw combos (with duplicates) as sorted-5-char strings of tens digits (0..9).
     method: '1-digit'  => choose 1 digit from seed, plus 4 free digits
             '2-digit pair' => choose any unordered pair from seed, plus 3 free digits
     """
