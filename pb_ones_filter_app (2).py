@@ -12,7 +12,7 @@ import streamlit as st
 MANUAL_FILTER_CSV = "pb_ones_filters_adapted.csv"
 ZONE_FILTER_CSV_CANDIDATES = [
     "pb_ones_percentile_filters_updated.csv",
-    "pb_ones_percentile_filters.csv",
+    "filters_ones_cleaned.csv",
 ]
 
 # -----------------------------
