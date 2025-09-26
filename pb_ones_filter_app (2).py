@@ -11,7 +11,7 @@ import streamlit as st
 MANUAL_FILTER_CSV = "filters_ones_cleaned.csv"
 ZONE_FILTER_CSV_CANDIDATES = [
     "pb_ones_percentile_filters_final.csv",
-    ]
+    "filters_ones_cleaned.csv" ]
 
 # -----------------------------
 # Constants
