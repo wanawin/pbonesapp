@@ -76,7 +76,7 @@ filter_id,variant,expression,layman_explanation,stat,source
 1F297,ones,sum(1 for d in combo_digits if d in seed_digits) >=5 and winner <15 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=5 and winner <15 and winner_structure == 5 and winner_structure == 5,7/311,keeper
 1F543,ones,winner_structure == 2,Eliminate if the combination meets: winner_structure == 2,0/311,keeper
 1F567,ones,len(set(combo_digits)) < 5,Eliminate if the combo contains duplicate digits.,4/311,keeper
-1F579,ones,"sorted(Counter(combo_digits).values) == [2, 2, 1]","Eliminate if the combination meets: sorted(Counter(combo_digits).values) == [2, 2, 1]",0/311,keeper
+1F579,ones,"sorted(Counter(combo_digits).values) == [2, 2, 1]","Eliminate if the combination has exactly two digits repeated twice and one digit appearing once (Double-Double pattern).",0/311,keeper
 1F582,ones,3 in Counter(combo_digits).values,Eliminate if the combination meets: 3 in Counter(combo_digits).values,167/311,keeper
 1F601,ones,len(set(combo_digits)) == 5,Eliminate if the combo uses 5 unique digits.,54/311,keeper
 1F605,ones,len(set(combo_digits).intersection(seed_digits)) > 3,Eliminate if the combination shares 3 or more digits with the seed.,242/311,keeper
