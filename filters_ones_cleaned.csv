@@ -1,5 +1,5 @@
 filter_id,variant,expression,layman_explanation,stat,source
-01F183,ones,"sum(1 for d in combo_digits if d in {2,3,5,7}) >= 4 and winner_structure == 5","Eliminate if the combination meets: the combo contains 4+ prime digits and is a 5-of-a-kind (quint)",26/311,keeper
+01F183,ones,sum(1 for d in combo_digits if d in {2,3,5,7}) >= 4 and winner_structure == 5,Eliminate if the combination meets: the combo contains 4+ prime digits and is a 5-of-a-kind (quint),26/311,keeper
 0F001,ones,winner == 1,Eliminate if the combination meets: if the combo equals 1,0/311,keeper
 0F062,ones,winner % 10 == 6,Eliminate if the combination meets:if the combo ends with 6,33/311,keeper
 0F064,ones,winner % 10 == 5,Eliminate if the combination meets: if the combo ends with 5,25/311,keeper
