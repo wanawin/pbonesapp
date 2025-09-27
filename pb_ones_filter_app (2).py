@@ -11,7 +11,8 @@ import streamlit as st
 MANUAL_FILTER_CSV = "filters_ones_cleaned.csv"
 ZONE_FILTER_CSV_CANDIDATES = [
     "pb_ones_percentile_filters_final.csv",
-    "filters_ones_cleaned.csv" ]
+    "filters_ones_cleaned.csv"
+]
 
 # -----------------------------
 # Constants
@@ -19,6 +20,19 @@ ZONE_FILTER_CSV_CANDIDATES = [
 DIGITS = "0123456789"  # ones-only model
 LOW_SET = {0, 1, 2, 3, 4}
 HIGH_SET = {5, 6, 7, 8, 9}
+
+# Mirror digit map (0↔5, 1↔6, 2↔7, 3↔8, 4↔9)
+MIRROR_MAP = {0: 5, 1: 6, 2: 7, 3: 8, 4: 9, 5: 0, 6: 1, 7: 2, 8: 3, 9: 4}
+
+# V-Trac groups: digits 0–9 mapped to 0–4 buckets (commonly used)
+# Adjust if your V-Trac definition is different
+VTRAC_MAP = {
+    0: 0, 5: 0,
+    1: 1, 6: 1,
+    2: 2, 7: 2,
+    3: 3, 8: 3,
+    4: 4, 9: 4
+}
 
 # -----------------------------
 # Utilities
@@ -55,8 +69,11 @@ def load_filters(path: str, is_zone: bool = False) -> list[dict]:
             layman = (row.get("layman") or row.get("layman_explanation") or "").strip()
             hist = (row.get("stat") or row.get("hist") or "").strip()
             code, cerr = _compile_row(row, fid)
-            out.append(dict(id=fid, layman=f"[syntax error: {cerr}] {layman}" if cerr else layman,
-                            hist=hist, code=code, is_zone=is_zone))
+            out.append(dict(id=fid,
+                            layman=f"[syntax error: {cerr}] {layman}" if cerr else layman,
+                            hist=hist,
+                            code=code,
+                            is_zone=is_zone))
     return out
 
 def sum_category(total: int) -> str:
@@ -84,6 +101,13 @@ def make_ctx(seed: str, prevs: list[str], combo: str, hot: list[int], cold: list
     seed_digits = [int(c) for c in seed]
     prev_digits = [int(c) for c in (prevs[0] or "")] if prevs else []
     prev_prev_digits = [int(c) for c in (prevs[1] or "")] if len(prevs) > 1 else []
+
+    # Build mirror and V-Trac lists
+    combo_mirrors = [MIRROR_MAP[d] for d in combo_digits]
+    seed_mirrors = [MIRROR_MAP[d] for d in seed_digits]
+    combo_vtracs = [VTRAC_MAP[d] for d in combo_digits]
+    seed_vtracs = [VTRAC_MAP[d] for d in seed_digits]
+
     return {
         "variant_name": "ones",
         "combo_digits": combo_digits,
@@ -92,25 +116,33 @@ def make_ctx(seed: str, prevs: list[str], combo: str, hot: list[int], cold: list
         "prev_prev_seed_digits": prev_prev_digits,
         "winner_value": sum(combo_digits),
         "seed_value": sum(seed_digits),
-        "winner_even_count": sum(1 for d in combo_digits if d%2==0),
-        "winner_odd_count": sum(1 for d in combo_digits if d%2==1),
+        "winner_even_count": sum(1 for d in combo_digits if d % 2 == 0),
+        "winner_odd_count": sum(1 for d in combo_digits if d % 2 == 1),
         "winner_unique_count": len(set(combo_digits)),
-        "winner_range": max(combo_digits)-min(combo_digits) if combo_digits else 0,
+        "winner_range": max(combo_digits) - min(combo_digits) if combo_digits else 0,
         "winner_low_count": sum(1 for d in combo_digits if d in LOW_SET),
         "winner_high_count": sum(1 for d in combo_digits if d in HIGH_SET),
-        "hot_digits": hot, "cold_digits": cold, "due_digits": due,
-        "Counter": Counter, "sum_category": sum_category, "abs": abs, "len": len, "set": set,
+        "combo_mirrors": combo_mirrors,
+        "seed_mirrors": seed_mirrors,
+        "combo_vtracs": combo_vtracs,
+        "seed_vtracs": seed_vtracs,
+        "hot_digits": hot,
+        "cold_digits": cold,
+        "due_digits": due,
+        "Counter": Counter,
+        "sum_category": sum_category,
+        "abs": abs,
+        "len": len,
+        "set": set,
     }
 
 def auto_hot_cold_due(seed: str, prevs: list[str]) -> tuple[list[int], list[int], list[int]]:
-    # hot/cold from up to 10 draws if available
     seq10 = "".join([seed] + [p for p in prevs if p])
     hot = cold = []
     if len(seq10) >= 50:
         cnt = Counter(int(ch) for ch in seq10)
         hot = [d for d,_ in cnt.most_common(3)]
         cold = [d for d,_ in cnt.most_common()[-3:]]
-    # due strictly from last 2 draws
     seq2 = "".join([s for s in [seed] + prevs[:1] if s])
     due = []
     if len(seq2) >= 10:
