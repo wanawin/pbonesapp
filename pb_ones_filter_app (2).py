@@ -8,10 +8,15 @@ import streamlit as st
 # -----------------------------
 # Files
 # -----------------------------
-MANUAL_FILTER_CSV = "filters_ones_cleaned.csv"
+MANUAL_FILTER_CSV_CANDIDATES = [
+    "filters_ones_cleaned_FINAL_BALANCED_DEDUPED.csv",
+    "filters_ones_cleaned_FINAL_BALANCED_PLAIN4.csv",
+    "filters_ones_cleaned_FINAL_BALANCED.csv",
+    "filters_ones_cleaned.csv",
+]
 ZONE_FILTER_CSV_CANDIDATES = [
     "pb_ones_percentile_filters_final.csv",
-    "filters_ones_cleaned.csv"
+    "filters_ones_cleaned.csv",
 ]
 
 # -----------------------------
@@ -98,7 +103,7 @@ def gen_raw_combos(seed: str, method: str) -> list[str]:
                 raw.append("".join(sorted(pair + "".join(p))))
     return raw
 
-# ---------- Mirror helpers (NEW) ----------
+# ---------- Mirror helpers ----------
 def mirror_digits(seq):
     """Return the digit-wise mirrors for a sequence of ints."""
     return [MIRROR_MAP[int(d)] for d in seq]
@@ -117,20 +122,51 @@ def mirror(x):
         # Fallback: try to iterate
         return [MIRROR_MAP[int(d)] for d in x]
 
+# ---------- Hot / Cold / Due (robust) ----------
+def auto_hot_cold_due(seed: str, prevs: list[str], hot_n: int = 3, cold_n: int = 3,
+                      hot_window: int = 10, due_window: int = 2):
+    """
+    Compute hot/cold from up to `hot_window` draws (seed + prevs) — works with any history length.
+    Compute due from the last `due_window` draws.
+    Includes ties (you may get > hot_n or > cold_n if frequencies tie at the cutoff).
+    """
+    recents = [s for s in [seed] + prevs if s]
+    # HOT/COLD
+    seq_hotcold = "".join(recents[:hot_window])
+    hot, cold = [], []
+    if seq_hotcold:
+        cnt = Counter(int(ch) for ch in seq_hotcold)
+        if cnt:
+            # HOT (top hot_n with ties)
+            freqs_desc = cnt.most_common()
+            cutoff = freqs_desc[min(hot_n - 1, len(freqs_desc) - 1)][1] if freqs_desc else 0
+            hot = sorted([d for d, c in cnt.items() if c >= cutoff])
+            # COLD (bottom cold_n with ties)
+            freqs_asc = sorted(cnt.items(), key=lambda kv: (kv[1], kv[0]))
+            cutoff_c = freqs_asc[min(cold_n - 1, len(freqs_asc) - 1)][1] if freqs_asc else 0
+            cold = sorted([d for d, c in cnt.items() if c <= cutoff_c])
+    # DUE
+    seq_due = "".join(recents[:due_window])
+    due = []
+    if seq_due:
+        seen = {int(ch) for ch in seq_due}
+        due = [d for d in range(10) if d not in seen]
+    return hot, cold, due
+
 def make_ctx(seed: str, prevs: list[str], combo: str, hot: list[int], cold: list[int], due: list[int]):
     combo_digits = [int(c) for c in combo] if combo else []
     seed_digits = [int(c) for c in seed]
     prev_digits = [int(c) for c in (prevs[0] or "")] if prevs else []
     prev_prev_digits = [int(c) for c in (prevs[1] or "")] if len(prevs) > 1 else []
 
-    # Mirrors & V-Trac (NEW)
+    # Mirrors & V-Trac
     combo_mirrors = mirror_digits(combo_digits)
     seed_mirrors = mirror_digits(seed_digits)
     combo_vtracs = [VTRAC_MAP[d] for d in combo_digits]
     seed_vtracs = [VTRAC_MAP[d] for d in seed_digits]
 
     # Ones-variant scalar values:
-    # Many filters use 'winner'/'seed' names; alias them to the sum of digits
+    # Many CSV expressions use 'winner'/'seed' — alias them to sum of digits (variant value)
     winner_val = sum(combo_digits)
     seed_val = sum(seed_digits)
 
@@ -143,6 +179,8 @@ def make_ctx(seed: str, prevs: list[str], combo: str, hot: list[int], cold: list
         "seed_digits": seed_digits,
         "prev_seed_digits": prev_digits,
         "prev_prev_seed_digits": prev_prev_digits,
+        "combo_digits_set": set(combo_digits),
+        "seed_digits_set": set(seed_digits),
 
         # Scalars commonly referenced in expressions
         "winner_value": winner_val,
@@ -158,42 +196,26 @@ def make_ctx(seed: str, prevs: list[str], combo: str, hot: list[int], cold: list
         "winner_low_count": sum(1 for d in combo_digits if d in LOW_SET),
         "winner_high_count": sum(1 for d in combo_digits if d in HIGH_SET),
 
-        # Mirrors & V-Trac available to filters
+        # Mirrors & V-Trac
         "combo_mirrors": combo_mirrors,
         "seed_mirrors": seed_mirrors,
         "combo_vtracs": combo_vtracs,
         "seed_vtracs": seed_vtracs,
-        "mirror_map": MIRROR_MAP,  # some expressions may reference a map
-        "mirror": mirror,          # some expressions call mirror(...)
+        "mirror_map": MIRROR_MAP,
+        "mirror": mirror,
 
-        # Hot/Cold/Due
-        "hot_digits": hot,
-        "cold_digits": cold,
-        "due_digits": due,
+        # Hot/Cold/Due + aliases + sets
+        "hot_digits": hot, "cold_digits": cold, "due_digits": due,
+        "hot": hot, "cold": cold, "due": due,
+        "hot_set": set(hot), "cold_set": set(cold), "due_set": set(due),
 
-        # Safe builtins
+        # Safe builtins for eval()
         "Counter": Counter,
         "sum_category": sum_category,
-        "abs": abs,
-        "len": len,
-        "set": set,
+        "abs": abs, "len": len, "set": set,
+        "sorted": sorted, "max": max, "min": min, "range": range,
+        "any": any, "all": all,
     }
-
-def auto_hot_cold_due(seed: str, prevs: list[str]) -> tuple[list[int], list[int], list[int]]:
-    # hot/cold from up to 10 draws if available
-    seq10 = "".join([seed] + [p for p in prevs if p])
-    hot = cold = []
-    if len(seq10) >= 50:
-        cnt = Counter(int(ch) for ch in seq10)
-        hot = [d for d, _ in cnt.most_common(3)]
-        cold = [d for d, _ in cnt.most_common()[-3:]]
-    # due strictly from last 2 draws
-    seq2 = "".join([s for s in [seed] + prevs[:1] if s])
-    due = []
-    if len(seq2) >= 10:
-        cnt2 = Counter(int(ch) for ch in seq2)
-        due = [d for d in range(10) if d not in cnt2]
-    return hot, cold, due
 
 def apply_zone_filters(raw_combos, zone_filters, seed, prevs, hot, cold, due):
     survivors = []
@@ -207,7 +229,7 @@ def apply_zone_filters(raw_combos, zone_filters, seed, prevs, hot, cold, due):
                         eliminate = True
                         break
                 except Exception:
-                    # Ignore broken filters
+                    # ignore broken filters but keep running
                     pass
         if not eliminate:
             survivors.append(c)
@@ -221,9 +243,9 @@ seed = st.sidebar.text_input("Draw 1-back (required, 5 digits 0–9):").strip()
 prevs = [st.sidebar.text_input(f"Draw {i}-back:", value="").strip() for i in range(2, 11)]
 method = st.sidebar.selectbox("Generation Method:", ["1-digit", "2-digit pair"])
 
-hot_override = st.sidebar.text_input("Hot digits override:", value="")
-cold_override = st.sidebar.text_input("Cold digits override:", value="")
-due_override = st.sidebar.text_input("Due digits override:", value="")
+hot_override = st.sidebar.text_input("Hot digits override (e.g. 0 2 8):", value="")
+cold_override = st.sidebar.text_input("Cold digits override (e.g. 1,3,7):", value="")
+due_override = st.sidebar.text_input("Due digits override (e.g. 4 5):", value="")
 
 track = st.sidebar.text_input("Track/Test combo (e.g., 01234):").strip()
 track_norm = "".join(sorted("".join(ch for ch in track if ch.isdigit()))) if track else None
@@ -237,9 +259,13 @@ if len(seed) != 5 or any(ch not in DIGITS for ch in seed):
     st.info("Enter a valid 5-digit seed first.")
     st.stop()
 
-manual_filters = load_filters(MANUAL_FILTER_CSV, is_zone=False)
-zone_filters = load_filters(_first_existing(ZONE_FILTER_CSV_CANDIDATES), is_zone=True)
+# Load filters
+manual_path = _first_existing(MANUAL_FILTER_CSV_CANDIDATES)
+zone_path = _first_existing(ZONE_FILTER_CSV_CANDIDATES)
+manual_filters = load_filters(manual_path, is_zone=False)
+zone_filters = load_filters(zone_path, is_zone=True)
 
+# Hot/Cold/Due (auto with optional overrides)
 auto_hot, auto_cold, auto_due = auto_hot_cold_due(seed, prevs)
 parse_list = lambda txt: [int(t) for t in txt.replace(",", " ").split() if t.isdigit() and 0 <= int(t) <= 9]
 hot = parse_list(hot_override) or auto_hot
@@ -249,9 +275,9 @@ due = parse_list(due_override) or auto_due
 st.sidebar.markdown(f"**Auto ➜** Hot {auto_hot} | Cold {auto_cold} | Due {auto_due}")
 st.sidebar.markdown(f"**Using ➜** Hot {hot} | Cold {cold} | Due {due}")
 
+# Generate, zone-filter, unique
 raw = gen_raw_combos(seed, method)
 raw_count = len(raw)
-
 raw_after_zones = apply_zone_filters(raw, zone_filters, seed, prevs, hot, cold, due)
 after_zones_count = len(raw_after_zones)
 unique_baseline = sorted(set(raw_after_zones))
