@@ -271,7 +271,7 @@ REV_5F569_ones,ones,len(set(combo_digits).intersection(seed_digits)) < 3,Elimina
 REV_5F570_ones,ones,list(Counter(combo_digits).values).count(2) + list(Counter(combo_digits).values).count(3) <= 1,Eliminate if the combination meets: list(Counter(combo_digits).values).count(2) + list(Counter(combo_digits).values).count(3) <= 1,271/311,reversed
 REV_NO110F721_ones,ones,len(set(combo_digits) & set(seed_digits)) <= 2,Eliminate if the combination shares 2 or fewer digits with the seed.,298/311,reversed
 REV_NO296F549_ones,ones,"any(mirror.get(d,None) in combo_digits for d in combo_digits) and max(combo_digits) - min(combo_digits) <= 4","Eliminate if the combination meets: any(mirror.get(d,None) in combo_digits for d in combo_digits) and max(combo_digits) - min(combo_digits) <= 4",305/311,reversed
-REV_NO659F314_ones,ones,abs(winner - seed) >15,Eliminate if the combination meets: abs(winner - seed) >15,293/311,reversed
-REV_NO78F720_ones,ones,sum(1 for d in combo_digits if d in seed_digits) <= 3,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) <= 3,303/311,reversed
-REV_NVR617F316_ones,ones,abs(winner - seed) >13,Eliminate if the combination meets: abs(winner - seed) >13,280/311,reversed
-REV_NVR643F315_ones,ones,abs(winner - seed) >14,Eliminate if the combination meets: abs(winner - seed) >14,286/311,reversed
+REV_NO659F314_ones,ones,abs(winner - seed) >15,Eliminate if the combination meets: the absolute difference between the current value and the previous draw’s value is greater than 15,293/311,reversed
+REV_NO78F720_ones,ones,sum(1 for d in combo_digits if d in seed_digits) <= 3,Eliminate if the combination meets: if the combination shares 3 or fewer digits with the seed,303/311,reversed
+REV_NVR617F316_ones,ones,abs(winner - seed) >13,Eliminate if the combination meets: the absolute difference between the current value and the previous draw’s value is greater than 13.,280/311,reversed
+REV_NVR643F315_ones,ones,abs(winner - seed) >14,Eliminate if the combination meets: the absolute difference between the current value and the previous draw’s value is greater than 14.,286/311,reversed
