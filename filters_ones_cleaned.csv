@@ -106,7 +106,7 @@ filter_id,variant,expression,layman_explanation,stat,source
 22F357,ones,prev_seed_sum > 20 and seed < 20 and winner < 20,Eliminate if the combination meets: prev_seed_sum > 20 and seed < 20 and winner < 20,33/311,keeper
 23F282,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <20 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <20 and winner_structure == 5 and winner_structure == 5,18/311,keeper
 23F536,ones,(25 <= seed <= 33) and (0 <= winner <= 15,Eliminate if the combination meets: 25 <= seed <= 33) and (0 <= winner <= 15),11/311,keeper
-24F554,ones,"not any(mirror.get(d,None) in combo_digits for d in combo_digits) and all(d % 2 == 1 for d in combo_digits","Eliminate if the combination meets: not any(mirror.get(d,None) in combo_digits for d in combo_digits) and all(d % 2 == 1 for d in combo_digits",0/311,keeper
+24F554,ones,"not any(mirror.get(d, None) in combo_digits for d in combo_digits) and all(d % 2 == 1 for d in combo_digits)","Eliminate if the combo has no mirror digits and all digits are odd",0/311,keeper
 254F555,ones,sum(1 for d in combo_digits if mirror.get(d) in combo_digits) >= 4,Eliminate if the combination meets: sum(1 for d in combo_digits if mirror.get(d) in combo_digits) >= 4,262/311,keeper
 25F351,ones,sum(1 for d in combo_digits if d in seed_digits)>=1 and winner<12 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits)>=1 and winner<12 and winner_structure == 5 and winner_structure == 5,5/311,keeper
 26F347,ones,sum(1 for d in combo_digits if d in seed_digits)>=2 and winner<13 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits)>=2 and winner<13 and winner_structure == 5 and winner_structure == 5,7/311,keeper
@@ -125,11 +125,11 @@ filter_id,variant,expression,layman_explanation,stat,source
 2F636,ones,winner > 32,Eliminate if the combination meets: winner > 32,15/311,keeper
 2F657,ones,winner > 40,Eliminate if the combination meets: winner > 40,0/311,keeper
 2F679,ones,winner > 34,Eliminate if the combination meets: winner > 34,8/311,keeper
-31F323,ones,all(d>=5 for d in combo_digits),Eliminate if the combination meets: all(d>=5 for d in combo_digits,0/311,keeper
+31F323,ones,all(d>=5 for d in combo_digits),Eliminate if the combination meets: all(d>=5 for d in combo_digits),0/311,keeper
 32F339,ones,sum(1 for d in combo_digits if d in seed_digits)>=3 and winner<16 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits)>=3 and winner<16 and winner_structure == 5 and winner_structure == 5,9/311,keeper
 32F532,ones,(16 <= seed <= 24) and (34 <= winner <= 45,Eliminate if the combination meets: (16 <= seed <= 24) and (34 <= winner <= 45),8/311,keeper
 33F245,ones,"any(set(range(n,n+4)).issubset(set(combo_digits)) for n in range(7))and winner_structure == 5 and winner_structure == 5",Eliminate if the combination contains a run of 4 or more consecutive digits.,8/311,keeper
-346F551,ones,"any(mirror.get(d,None) in combo_digits for d in combo_digits) and not all(d % 2 == 1 for d in combo_digits","Eliminate if the combination meets: any(mirror.get(d,None) in combo_digits for d in combo_digits) and not all(d % 2 == 1 for d in combo_digits",305/311,keeper
+346F551,ones,"any(mirror.get(d, None) in combo_digits for d in combo_digits) and not all(d % 2 == 1 for d in combo_digits)","Eliminate if the combo has at least one mirror digit but not all digits are odd",305/311,keeper
 34F284,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <18 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <18 and winner_structure == 5 and winner_structure == 5,13/311,keeper
 35F346,ones,sum(1 for d in combo_digits if d in seed_digits)>=2 and winner<14 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits)>=2 and winner<14 and winner_structure == 5 and winner_structure == 5,7/311,keeper
 37F285,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <17 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <17 and winner_structure == 5 and winner_structure == 5,11/311,keeper
@@ -141,7 +141,7 @@ filter_id,variant,expression,layman_explanation,stat,source
 3F233,ones,winner==6,Eliminate if the combination meets: the combo equals 6,0/311,keeper
 3F291,ones,sum(1 for d in combo_digits if d in seed_digits) >=5 and winner <21 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=5 and winner <21 and winner_structure == 5 and winner_structure == 5,18/311,keeper
 3F708,ones,winner > 23,Eliminate if the combination meets: winner > 23,129/311,keeper
-40F198,ones,not any(d in cold_digits for d in combo_digits,Eliminate if the combination meets: not any(d in cold_digits for d in combo_digits,57/311,keeper
+40F198,ones,"not any(d in cold_digits for d in combo_digits)","Eliminate if the combo has no cold digits",57/311,keeper
 42F356,ones,winner%2==0,Eliminate if the combination meets: the combo is even,163/311,keeper
 44F287,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <25 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <25 and winner_structure == 5 and winner_structure == 5,26/311,keeper
 45F541,ones,winner_structure == 5,Eliminate if the combination meets: winner_structure == 5,32/311,keeper
@@ -153,18 +153,18 @@ filter_id,variant,expression,layman_explanation,stat,source
 4F313,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <11 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <11 and winner_structure == 5 and winner_structure == 5,4/311,keeper
 4F565,ones,len(set(combo_digits).intersection(seed_digits)) > 1,Eliminate if the combination shares 1 or more digits with the seed.,311/311,keeper
 4F628,ones,winner > 25,Eliminate if the combination meets: winner > 25,99/311,keeper
-50F254,ones,not (16<=winner<=25,Eliminate if the combination meets: not (16<=winner<=25,134/311,keeper
+50F254,ones,"not (16 <= winner <= 25)","Eliminate if the combo’s value is not between 16 and 25",134/311,keeper
 52F288,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <36 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <36 and winner_structure == 5 and winner_structure == 5,30/311,keeper
 54F289,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <37 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <37 and winner_structure == 5 and winner_structure == 5,31/311,keeper
 56F337,ones,sum(1 for d in combo_digits if d in seed_digits)>=3 and winner<18 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits)>=3 and winner<18 and winner_structure == 5 and winner_structure == 5,13/311,keeper
 58F335,ones,"not any(mirror.get(d,-1) in combo_digits for d in seed_digits) and winner_structure == 5 and winner_structure == 5","Eliminate if the combination meets: not any(mirror.get(d,-1) in combo_digits for d in seed_digits) and winner_structure == 5 and winner_structure == 5",0/311,keeper
-59F255,ones,not (14<=winner<=24,Eliminate if the combination meets: not (14<=winner<=24,131/311,keeper
+59F255,ones,"not (14 <= winner <= 24)","Eliminate if the combo’s value is not between 14 and 24",131/311,keeper
 59F262,ones,winner<14 or winner>24,Eliminate if the combination meets: winner<14 or winner>24,131/311,keeper
-5F559,ones,"sorted(Counter(combo_digits).values) == [2, 3] and any(d in mirror.values for d in combo_digits) and sum(d <= 4 for d in combo_digits) < 4","Eliminate if the combination meets: sorted(Counter(combo_digits).values) == [2, 3] and any(d in mirror.values for d in combo_digits) and sum(d <= 4 for d in combo_digits) < 4",0/311,keeper
+5F559,ones,"sorted(Counter(combo_digits).values()) == [2, 3] and any(d in mirror.values() for d in combo_digits) and sum(d <= 4 for d in combo_digits) < 4","Eliminate if the combo is a double+triple with at least one mirror digit and fewer than four digits ≤4",0/311,keeper
 5F566,ones,len(set(combo_digits).intersection(seed_digits)) > 2,Eliminate if the combination shares 2 or more digits with the seed.,298/311,keeper
 5F569,ones,len(set(combo_digits).intersection(seed_digits)) >= 3,Eliminate if the combination shares 3 or more digits with the seed.,298/311,keeper
-5F570,ones,list(Counter(combo_digits).values).count(2) + list(Counter(combo_digits).values).count(3) > 1,Eliminate if the combination meets: list(Counter(combo_digits).values).count(2) + list(Counter(combo_digits).values).count(3) > 1,271/311,keeper
-63F186,ones,any(v >=3 for v in Counter(combo_digits).values,Eliminate if the combination meets: any(v >=3 for v in Counter(combo_digits).values,204/311,keeper
+5F570,ones,"list(Counter(combo_digits).values()).count(2) + list(Counter(combo_digits).values()).count(3) > 1","Eliminate if the combo has more than one repeated digit group (pairs or triples)",271/311,keeper
+63F186,ones,"any(v >= 3 for v in Counter(combo_digits).values())","Eliminate if any digit repeats 3 or more times",204/311,keeper
 63F224,ones,"not any(d in combo_digits for d in [1,3,5]","Eliminate if the combination meets: not any(d in combo_digits for d in [1,3,5]",1/311,keeper
 63F275,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <28 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <28 and winner_structure == 5 and winner_structure == 5,27/311,keeper
 63F280,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <22 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <22 and winner_structure == 5 and winner_structure == 5,20/311,keeper
@@ -172,15 +172,15 @@ filter_id,variant,expression,layman_explanation,stat,source
 67F279,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <24 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <24 and winner_structure == 5 and winner_structure == 5,24/311,keeper
 6F058,ones,winner % 10 == 8,Eliminate if the combination meets: the combo’s last digit is 8,37/311,keeper
 6F205,ones,winner <8 or winner >28,Eliminate if the combination meets: winner <8 or winner >28,53/311,keeper
-6F257,ones,not (12<=winner<=25,Eliminate if the combination meets: not (12<=winner<=25,109/311,keeper
+6F257,ones,"not (12 <= winner <= 25)","Eliminate if the combo’s value is not between 12 and 25",109/311,keeper
 6F266,ones,winner%10==0,Eliminate if the combination meets: the combo’s last digit is 0,34/311,keeper
 6F311,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <13 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <13 and winner_structure == 5 and winner_structure == 5,7/311,keeper
 6F560,ones,len(set(combo_digits).intersection(seed_digits)) == 1 and winner < 14,Eliminate if the combination shares exactly 1 digits with the seed.,0/311,keeper
 70F270,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <33 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <33 and winner_structure == 5 and winner_structure == 5,29/311,keeper
 70F273,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <30 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <30 and winner_structure == 5 and winner_structure == 5,28/311,keeper
 70F278,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <26 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <26 and winner_structure == 5 and winner_structure == 5,26/311,keeper
-71F190,ones,int(str(winner)[-1]) == int(str(seed)[0],Eliminate if the combination meets: int(str(winner)[-1]) == int(str(seed)[0],31/311,keeper
-71F220,ones,"not any(d in combo_digits for d in [2,3,4]","Eliminate if the combination meets: not any(d in combo_digits for d in [2,3,4]",1/311,keeper
+71F190,ones,"int(str(winner)[-1]) == int(str(seed)[0])","Eliminate if the last digit of the combo matches the first digit of the previous draw",31/311,keeper
+71F220,ones,"not any(d in combo_digits for d in [2, 3, 4])","Eliminate if the combo has none of the digits 2, 3, or 4",1/311,keeper
 71F249,ones,1 not in combo_digits and 2 not in combo_digits and 3 not in combo_digits,Eliminate if the combination meets: 1 not in combo_digits and 2 not in combo_digits and 3 not in combo_digits,2/311,keeper
 71F250,ones,2 not in combo_digits and 3 not in combo_digits and 4 not in combo_digits,Eliminate if the combination meets: 2 not in combo_digits and 3 not in combo_digits and 4 not in combo_digits,1/311,keeper
 74F269,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <34 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <34 and winner_structure == 5 and winner_structure == 5,29/311,keeper
@@ -190,7 +190,7 @@ filter_id,variant,expression,layman_explanation,stat,source
 75F276,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <27 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <27 and winner_structure == 5 and winner_structure == 5,27/311,keeper
 76F309,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <39 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <39 and winner_structure == 5 and winner_structure == 5,32/311,keeper
 77F308,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <40 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <40 and winner_structure == 5 and winner_structure == 5,32/311,keeper
-78F221,ones,"not any(d in combo_digits for d in [1,2,3]","Eliminate if the combination meets: not any(d in combo_digits for d in [1,2,3]",2/311,keeper
+78F221,ones,"not any(d in combo_digits for d in [1, 2, 3])","Eliminate if the combo has none of the digits 1, 2, or 3",2/311,keeper
 78F303,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <45 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <45 and winner_structure == 5 and winner_structure == 5,32/311,keeper
 78F304,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <44 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <44 and winner_structure == 5 and winner_structure == 5,32/311,keeper
 78F305,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <43 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <43 and winner_structure == 5 and winner_structure == 5,32/311,keeper
@@ -203,47 +203,47 @@ filter_id,variant,expression,layman_explanation,stat,source
 8F226,ones,winner==10,Eliminate if the combination meets: the combo equals 10,2/311,keeper
 8F344,ones,sum(1 for d in combo_digits if d in seed_digits)>=3 and winner<11 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits)>=3 and winner<11 and winner_structure == 5 and winner_structure == 5,4/311,keeper
 8F345,ones,sum(1 for d in combo_digits if d in seed_digits)>=3 and winner<10 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits)>=3 and winner<10 and winner_structure == 5 and winner_structure == 5,3/311,keeper
-8F562,ones,len(set(combo_digits).intersection(seed_digits)) == 1 and all(d % 2 == 1 for d in combo_digits,Eliminate if the combination shares exactly 1 digits with the seed.,0/311,keeper
+8F562,ones,"len(set(combo_digits).intersection(seed_digits)) == 1 and all(d % 2 == 1 for d in combo_digits)","Eliminate if the combo shares exactly 1 digit with the seed and all digits are odd",0/311,keeper
 91F180,ones,sum(1 for d in combo_digits if d in seed_digits) >=5 and winner <22 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=5 and winner <22 and winner_structure == 5 and winner_structure == 5,20/311,keeper
 9F343,ones,sum(1 for d in combo_digits if d in seed_digits)>=3 and winner<12 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits)>=3 and winner<12 and winner_structure == 5 and winner_structure == 5,5/311,keeper
 9F350,ones,sum(1 for d in combo_digits if d in seed_digits)>=2 and winner<10 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits)>=2 and winner<10 and winner_structure == 5 and winner_structure == 5,3/311,keeper
 F723,ones,str(winner)[-1] == str(seed)[-1],Eliminate if the combination meets: the combo and the previous draw end with the same digit,22/311,keeper
-F724,ones,seed % 9 or 9) % 3 == 0) and (((seed % 9 or 9) // 3) in combo_digits,Eliminate if the combination meets: seed % 9 or 9) % 3 == 0) and (((seed % 9 or 9) // 3) in combo_digits,83/311,keeper
+F724,ones,"(((seed % 9) or 9) % 3 == 0) and (((seed % 9) or 9) // 3 in combo_digits)","Eliminate if adjusted seed mod 9 is divisible by 3 and that quotient digit appears in the combo",83/311,keeper
 F725,ones,(winner % 9 or 9) == (seed % 9 or 9,Eliminate if the combination meets: if the combo’s digital root (mod 9) equals the previous draw’s digital root",35/311,keeper
 F726,ones,max(seed_digits) - min(seed_digits) == (winner % 9 or 9,Eliminate if the combination meets: max(seed_digits) - min(seed_digits) == (winner % 9 or 9,38/311,keeper
-F727,ones,"abs(winner - round((seed**0.5) * 1.5, 2)) <= 2),"Eliminate if the combination meets: if the current number is within 2 of 1.5 times the square root of the seed ",3/311,keeper
-F728,ones,"abs(winner - round((seed**0.5) * 2.0, 2)) <= 2),"Eliminate if the combination meets: if the current number is within 2 of twice the square root of the seed",10/311,keeper
-F729,ones,"abs(winner - round((seed**0.5) * 2.5, 2)) <= 2),"Eliminate if the combination meets: if the combo’s value is at most 2 away from 2.5×√seed",14/311,keeper
-F730,ones,"abs(winner - round((seed**0.5) * 3.0, 2)) <= 2),"Eliminate if the combination meets: if the combo’s value is at most 2 away from 3×√seed",33/311,keeper
-N015F538,ones,(0 <= seed <= 15) and (0 <= winner <= 15),Eliminate if the combination meets: 0 <= seed <= 15) and (0 <= winner <= 15,5/311,keeper
+F727,ones,"abs(winner - round((seed**0.5) * 1.5, 2)) <= 2,"Eliminate if the combination meets: if the current number is within 2 of 1.5 times the square root of the seed ",3/311,keeper
+F728,ones,"abs(winner - round((seed**0.5) * 2.0, 2)) <= 2,"Eliminate if the combination meets: if the current number is within 2 of twice the square root of the seed",10/311,keeper
+F729,ones,"abs(winner - round((seed**0.5) * 2.5, 2)) <= 2,"Eliminate if the combination meets: if the combo’s value is at most 2 away from 2.5×√seed",14/311,keeper
+F730,ones,"abs(winner - round((seed**0.5) * 3.0, 2)) <= 2","Eliminate if the combo’s value is within 2 of 3×√seed",33/311,keeper
+N015F538,ones,(0 <= seed <= 15) and (0 <= winner <= 15),Eliminate if the combination meets: 0 <= seed <= 15) and (0 <= winner <= 15),5/311,keeper
 NEWF725,ones,5 not in combo_digits and 8 not in combo_digits and 5 not in combo_digits,Eliminate if the combination meets: 5 not in combo_digits and 8 not in combo_digits and 5 not in combo_digits,57/311,keeper
-NO101F189,ones,not any(d in due_digits for d in combo_digits),Eliminate if the combination meets: not any(d in due_digits for d in combo_digits,104/311,keeper
+NO101F189,ones,not any(d in due_digits for d in combo_digits),Eliminate if the combination meets: not any(d in due_digits for d in combo_digits),104/311,keeper
 NO101F316R,ones,abs(winner - seed) > 13,Eliminate if the combination meets:if the absolute difference between the combo and the seed is greater than 13",31/311,keeper
 NO110F721,ones,len(set(combo_digits) & set(seed_digits)) > 2,Eliminate if the combination shares 2 or more digits with the seed.,298/311,keeper
 NO118F322,ones,abs((max(combo_digits)-min(combo_digits)) - (max(seed_digits)-min(seed_digits)))>3,Eliminate if the spread difference between the combination and the seed is greater than 3.,13/311,keeper
-NO123F252,ones,not (20<=winner<=28),Eliminate if the combination meets: not (20<=winner<=28,156/311,keeper
+NO123F252,ones,not (20<=winner<=28),Eliminate if the combination meets: not (20<=winner<=28),156/311,keeper
 NO124F181,ones,25 <= winner <= 33,Eliminate if the combination meets: 25 <= winner <= 33,98/311,keeper
 NO124F539,ones,not any(d in hot_digits for d in combo_digits),Eliminate if the combination meets: if the combo does not contain any hot digits",92/311,keeper
 NO135F215,ones,all(v in combo_vtracs for v in seed_vtracs),Eliminate if the combination meets: if the combo covers all the same V-Trac groups as the seed",168/311,keeper
 NO139F202,ones,all(d >=3 for d in combo_digits),Eliminate if the combination meets: if the combo has no digits below 3 (all digits are 3–9)",0/311,keeper
 NO142F551D,ones,"not any(mirror.get(d,None) in combo_digits for d in combo_digits),"Eliminate if the combination meets: if the combo does not contain any mirror pairs (no digit’s mirror is present)",6/311,keeper
-NO15F188,ones,"winner == sum(mirror.get(int(x),int(x)) for x in str(seed),"Eliminate if the combination meets: if the combo equals the total of the previous number’s digits after converting each to its mirror",9/311,keeper
-NO16F333,ones,"winner==sum(mirror.get(int(x),int(x)) for x in str(seed),"Eliminate if the combination meets: if the combo equals the sum of the previous draw’s digits after converting each to its mirror value",9/311,keeper
+NO15F188,ones,"winner == sum(mirror.get(int(x),int(x)) for x in str(seed)),"Eliminate if the combination meets: if the combo equals the total of the previous number’s digits after converting each to its mirror",9/311,keeper
+NO16F333,ones,"winner == sum(mirror.get(int(x), int(x)) for x in str(seed))","Eliminate if the combo equals the sum of the previous draw’s digits after mirroring each digit",9/311,keeper
 NO172F550S,ones,"any(mirror.get(d,None) in combo_digits for d in combo_digits) and sum(1 for d in combo_digits if d <= 4) < 4","Eliminate if the combination meets: if the combo includes a mirror pair but has less than four digits from 0–4",9/311,keeper
 NO177F318,ones,sum(d%2 for d in combo_digits)==sum(d%2 for d in seed_digits),Eliminate if the combination meets: if the combo has the same odd/even balance as the previous draw",65/311,keeper
-NO177F319,ones,5 - sum(d%2 for d in combo_digits) == 5 - sum(d%2 for d in seed_digits,Eliminate if the combination meets: 5 - sum(d%2 for d in combo_digits) == 5 - sum(d%2 for d in seed_digits,65/311,keeper
+NO177F319,ones,"5 - sum(d % 2 for d in combo_digits) == 5 - sum(d % 2 for d in seed_digits)","Eliminate if the combo and previous draw have the same number of even digits",65/311,keeper
 NO177F547,ones,sum(d in due_digits for d in combo_digits) > 2,Eliminate if the combination meets: sum(d in due_digits for d in combo_digits) > 2,49/311,keeper
 NO188F540,ones,sum(d in hot_digits for d in combo_digits) < 2,Eliminate if the combination meets: sum(d in hot_digits for d in combo_digits) < 2,184/311,keeper
 NO204F203,ones,sum(1 for d in combo_digits if d >=8) >=2,Eliminate if the combination meets:contains at least two digits that are 8 or 9,84/311,keeper
-NO21F551S,ones,"len(set(combo_digits)) == 5 and not any(mirror.get(d,None) in combo_digits for d in combo_digits",Eliminate if the combo uses 5 unique digits.,6/311,keeper
-NO25F556,ones,len(set(combo_digits)) > 3 and all(d not in mirror.values for d in combo_digits) and (max(combo_digits) - min(combo_digits) <= 4,Eliminate if the combo contains duplicate digits.,0/311,keeper
-NO262F184,ones,"not any(mirror.get(d, None) in combo_digits for d in combo_digits","Eliminate if the combination meets: not any(mirror.get(d, None) in combo_digits for d in combo_digits",6/311,keeper
-NO27F535,ones,16 <= seed <= 24) and (0 <= winner <= 15,Eliminate if the combination meets: 16 <= seed <= 24) and (0 <= winner <= 15,18/311,keeper
-NO296F355,ones,"any(d == mirror.get(int(str(seed)[-1]),-1) for d in combo_digits","Eliminate if the combination meets: any(d == mirror.get(int(str(seed)[-1]),-1) for d in combo_digits",193/311,keeper
+NO21F551S,ones,"len(set(combo_digits)) == 5 and not any(mirror.get(d, None) in combo_digits for d in combo_digits)","Eliminate if the combo has 5 unique digits and no mirror digits",6/311,keeper
+NO25F556,ones,"len(set(combo_digits)) > 3 and all(d not in mirror.values() for d in combo_digits) and (max(combo_digits) - min(combo_digits) <= 4)","Eliminate if the combo has ≥4 unique digits, no mirror digits, and a spread ≤4",0/311,keeper
+NO262F184,ones,"not any(mirror.get(d, None) in combo_digits for d in combo_digits)","Eliminate if the combo has no mirror digits of itself",6/311,keeper
+NO27F535,ones,"16 <= seed <= 24 and 0 <= winner <= 15","Eliminate if the previous draw is between 16–24 and the current combo is 0–15",18/311,keeper
+NO296F355,ones,any(d == mirror.get(int(str(seed)[-1]), -1) for d in combo_digits),Eliminate if any digit in the combo equals the mirror of the last digit of the previous draw,193/311,keeper
 NO296F549,ones,"any(mirror.get(d,None) in combo_digits for d in combo_digits) and max(combo_digits) - min(combo_digits) > 4","Eliminate if the combination meets: any(mirror.get(d,None) in combo_digits for d in combo_digits) and max(combo_digits) - min(combo_digits) > 4",305/311,keeper
-NO30F256,ones,not (14<=winner<=22,Eliminate if the combination meets: not (14<=winner<=22,169/311,keeper
+NO30F256,ones,not (14<=winner<=22),Eliminate if the combination meets: not (14<=winner<=22,169/311,keeper
 NO30F263,ones,winner<14 or winner>22,Eliminate if the combination meets: winner<14 or winner>22,169/311,keeper
-NO30F326,ones,all(d%2==0 for d in combo_digits,Eliminate if the combination meets: all(d%2==0 for d in combo_digits,0/311,keeper
+NO30F326,ones,all(d%2==0 for d in combo_digits),Eliminate if the combination meets: all(d%2==0 for d in combo_digits),0/311,keeper
 NO33F182,ones,winner <= 15,Eliminate if the combination meets: winner <= 15,35/311,keeper
 NO35F260,ones,winner<19 or winner>25,Eliminate if the combination meets: winner<19 or winner>25,185/311,keeper
 NO41F553,ones,"not any(mirror.get(d,None) in combo_digits for d in combo_digits) and sum(1 for d in combo_digits if d <= 4) >= 4","Eliminate if the combination meets: not any(mirror.get(d,None) in combo_digits for d in combo_digits) and sum(1 for d in combo_digits if d <= 4) >= 4",6/311,keeper
