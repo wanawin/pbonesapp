@@ -24,8 +24,7 @@ HIGH_SET = {5, 6, 7, 8, 9}
 # Mirror digit map (0↔5, 1↔6, 2↔7, 3↔8, 4↔9)
 MIRROR_MAP = {0: 5, 1: 6, 2: 7, 3: 8, 4: 9, 5: 0, 6: 1, 7: 2, 8: 3, 9: 4}
 
-# V-Trac groups: digits 0–9 mapped to 0–4 buckets (commonly used)
-# Adjust if your V-Trac definition is different
+# V-Trac groups (adjust if your definition differs)
 VTRAC_MAP = {
     0: 0, 5: 0,
     1: 1, 6: 1,
@@ -69,11 +68,13 @@ def load_filters(path: str, is_zone: bool = False) -> list[dict]:
             layman = (row.get("layman") or row.get("layman_explanation") or "").strip()
             hist = (row.get("stat") or row.get("hist") or "").strip()
             code, cerr = _compile_row(row, fid)
-            out.append(dict(id=fid,
-                            layman=f"[syntax error: {cerr}] {layman}" if cerr else layman,
-                            hist=hist,
-                            code=code,
-                            is_zone=is_zone))
+            out.append(dict(
+                id=fid,
+                layman=f"[syntax error: {cerr}] {layman}" if cerr else layman,
+                hist=hist,
+                code=code,
+                is_zone=is_zone
+            ))
     return out
 
 def sum_category(total: int) -> str:
@@ -90,11 +91,31 @@ def gen_raw_combos(seed: str, method: str) -> list[str]:
             for p in product(DIGITS, repeat=4):
                 raw.append("".join(sorted(d + "".join(p))))
     else:
-        pairs = {"".join(sorted((seed_sorted[i], seed_sorted[j]))) for i in range(5) for j in range(i+1,5)}
+        pairs = {"".join(sorted((seed_sorted[i], seed_sorted[j])))
+                 for i in range(5) for j in range(i+1, 5)}
         for pair in pairs:
             for p in product(DIGITS, repeat=3):
                 raw.append("".join(sorted(pair + "".join(p))))
     return raw
+
+# ---------- Mirror helpers (NEW) ----------
+def mirror_digits(seq):
+    """Return the digit-wise mirrors for a sequence of ints."""
+    return [MIRROR_MAP[int(d)] for d in seq]
+
+def mirror(x):
+    """
+    Flexible mirror helper for eval():
+    - If x is a list/tuple of digits -> return mirrored list
+    - If x is a single int/str digit -> return mirrored digit
+    """
+    if isinstance(x, (list, tuple)):
+        return [MIRROR_MAP[int(d)] for d in x]
+    try:
+        return MIRROR_MAP[int(x)]
+    except Exception:
+        # Fallback: try to iterate
+        return [MIRROR_MAP[int(d)] for d in x]
 
 def make_ctx(seed: str, prevs: list[str], combo: str, hot: list[int], cold: list[int], due: list[int]):
     combo_digits = [int(c) for c in combo] if combo else []
@@ -102,33 +123,55 @@ def make_ctx(seed: str, prevs: list[str], combo: str, hot: list[int], cold: list
     prev_digits = [int(c) for c in (prevs[0] or "")] if prevs else []
     prev_prev_digits = [int(c) for c in (prevs[1] or "")] if len(prevs) > 1 else []
 
-    # Build mirror and V-Trac lists
-    combo_mirrors = [MIRROR_MAP[d] for d in combo_digits]
-    seed_mirrors = [MIRROR_MAP[d] for d in seed_digits]
+    # Mirrors & V-Trac (NEW)
+    combo_mirrors = mirror_digits(combo_digits)
+    seed_mirrors = mirror_digits(seed_digits)
     combo_vtracs = [VTRAC_MAP[d] for d in combo_digits]
     seed_vtracs = [VTRAC_MAP[d] for d in seed_digits]
 
+    # Ones-variant scalar values:
+    # Many filters use 'winner'/'seed' names; alias them to the sum of digits
+    winner_val = sum(combo_digits)
+    seed_val = sum(seed_digits)
+
     return {
+        # Variant
         "variant_name": "ones",
+
+        # Core digit context
         "combo_digits": combo_digits,
         "seed_digits": seed_digits,
         "prev_seed_digits": prev_digits,
         "prev_prev_seed_digits": prev_prev_digits,
-        "winner_value": sum(combo_digits),
-        "seed_value": sum(seed_digits),
+
+        # Scalars commonly referenced in expressions
+        "winner_value": winner_val,
+        "seed_value": seed_val,
+        "winner": winner_val,   # alias so expressions using 'winner' work
+        "seed": seed_val,       # alias so expressions using 'seed' work
+
+        # Precomputed stats
         "winner_even_count": sum(1 for d in combo_digits if d % 2 == 0),
         "winner_odd_count": sum(1 for d in combo_digits if d % 2 == 1),
         "winner_unique_count": len(set(combo_digits)),
         "winner_range": max(combo_digits) - min(combo_digits) if combo_digits else 0,
         "winner_low_count": sum(1 for d in combo_digits if d in LOW_SET),
         "winner_high_count": sum(1 for d in combo_digits if d in HIGH_SET),
+
+        # Mirrors & V-Trac available to filters
         "combo_mirrors": combo_mirrors,
         "seed_mirrors": seed_mirrors,
         "combo_vtracs": combo_vtracs,
         "seed_vtracs": seed_vtracs,
+        "mirror_map": MIRROR_MAP,  # some expressions may reference a map
+        "mirror": mirror,          # some expressions call mirror(...)
+
+        # Hot/Cold/Due
         "hot_digits": hot,
         "cold_digits": cold,
         "due_digits": due,
+
+        # Safe builtins
         "Counter": Counter,
         "sum_category": sum_category,
         "abs": abs,
@@ -137,12 +180,14 @@ def make_ctx(seed: str, prevs: list[str], combo: str, hot: list[int], cold: list
     }
 
 def auto_hot_cold_due(seed: str, prevs: list[str]) -> tuple[list[int], list[int], list[int]]:
+    # hot/cold from up to 10 draws if available
     seq10 = "".join([seed] + [p for p in prevs if p])
     hot = cold = []
     if len(seq10) >= 50:
         cnt = Counter(int(ch) for ch in seq10)
-        hot = [d for d,_ in cnt.most_common(3)]
-        cold = [d for d,_ in cnt.most_common()[-3:]]
+        hot = [d for d, _ in cnt.most_common(3)]
+        cold = [d for d, _ in cnt.most_common()[-3:]]
+    # due strictly from last 2 draws
     seq2 = "".join([s for s in [seed] + prevs[:1] if s])
     due = []
     if len(seq2) >= 10:
@@ -162,6 +207,7 @@ def apply_zone_filters(raw_combos, zone_filters, seed, prevs, hot, cold, due):
                         eliminate = True
                         break
                 except Exception:
+                    # Ignore broken filters
                     pass
         if not eliminate:
             survivors.append(c)
@@ -172,7 +218,7 @@ st.set_page_config(page_title="Ones Filter App", layout="wide")
 
 st.sidebar.header("Inputs")
 seed = st.sidebar.text_input("Draw 1-back (required, 5 digits 0–9):").strip()
-prevs = [st.sidebar.text_input(f"Draw {i}-back:", value="").strip() for i in range(2,11)]
+prevs = [st.sidebar.text_input(f"Draw {i}-back:", value="").strip() for i in range(2, 11)]
 method = st.sidebar.selectbox("Generation Method:", ["1-digit", "2-digit pair"])
 
 hot_override = st.sidebar.text_input("Hot digits override:", value="")
@@ -187,7 +233,7 @@ inject_tracked = st.sidebar.checkbox("Inject tracked combos even if not generate
 select_all_toggle = st.sidebar.checkbox("Select/Deselect all filters (shown)", value=False)
 hide_zero = st.sidebar.checkbox("Hide filters with 0 initial cuts", value=True)
 
-if len(seed)!=5 or any(ch not in DIGITS for ch in seed):
+if len(seed) != 5 or any(ch not in DIGITS for ch in seed):
     st.info("Enter a valid 5-digit seed first.")
     st.stop()
 
@@ -195,7 +241,7 @@ manual_filters = load_filters(MANUAL_FILTER_CSV, is_zone=False)
 zone_filters = load_filters(_first_existing(ZONE_FILTER_CSV_CANDIDATES), is_zone=True)
 
 auto_hot, auto_cold, auto_due = auto_hot_cold_due(seed, prevs)
-parse_list = lambda txt: [int(t) for t in txt.replace(","," ").split() if t.isdigit() and 0<=int(t)<=9]
+parse_list = lambda txt: [int(t) for t in txt.replace(",", " ").split() if t.isdigit() and 0 <= int(t) <= 9]
 hot = parse_list(hot_override) or auto_hot
 cold = parse_list(cold_override) or auto_cold
 due = parse_list(due_override) or auto_due
@@ -239,9 +285,12 @@ for f in manual_filters:
             pass
     init_counts[f["id"]] = cuts
 
-display_filters = sorted((f for f in manual_filters if not f["is_zone"]), key=lambda f: -init_counts.get(f["id"],0))
+display_filters = sorted(
+    (f for f in manual_filters if not f["is_zone"]),
+    key=lambda f: -init_counts.get(f["id"], 0)
+)
 if hide_zero:
-    display_filters = [f for f in display_filters if init_counts.get(f["id"],0) > 0]
+    display_filters = [f for f in display_filters if init_counts.get(f["id"], 0) > 0]
 
 st.markdown("## 🛠 Manual Filters")
 st.caption(f"Applicable filters: **{len(display_filters)}**")
