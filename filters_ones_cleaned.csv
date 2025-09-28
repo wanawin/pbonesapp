@@ -243,7 +243,7 @@ NO296F355,ones,"any(d == mirror.get(int(str(seed)[-1]), -1) for d in combo_digit
 NO296F549,ones,"""any(mirror.get(d,None) in combo_digits for d in combo_digits) and max(combo_digits) - min(combo_digits) > 4""","""Eliminate if the combination meets: any(mirror.get(d,None) in combo_digits for d in combo_digits) and max(combo_digits) - min(combo_digits) > 4""",305/311,keeper
 NO30F256,ones,not (14<=winner<=22),Eliminate if the combination meets: not (14<=winner<=22,169/311,keeper
 NO30F263,ones,winner<14 or winner>22,Eliminate if the combination meets: winner<14 or winner>22,169/311,keeper
-NO30F326,ones,all(d%2==0 for d in combo_digits),Eliminate if the combination meets: all(d%2==0 for d in combo_digits),0/311,keeper
+30F326,ones,all(d % 2 == 0 for d in combo_digits),"Eliminate if the combo is made entirely of even digits",0/311,keeper
 NO33F182,ones,winner <= 15,Eliminate if the combination meets: winner <= 15,35/311,keeper
 NO35F260,ones,winner<19 or winner>25,Eliminate if the combination meets: winner<19 or winner>25,185/311,keeper
 NO41F553,ones,"""not any(mirror.get(d,None) in combo_digits for d in combo_digits) and sum(1 for d in combo_digits if d <= 4) >= 4""","""Eliminate if the combination meets: not any(mirror.get(d,None) in combo_digits for d in combo_digits) and sum(1 for d in combo_digits if d <= 4) >= 4""",6/311,keeper
