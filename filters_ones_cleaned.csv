@@ -217,7 +217,7 @@ F729,ones,"abs(winner - round((seed**0.5) * 2.5, 2)) <= 2","""Eliminate if the c
 F730,ones,"""abs(winner - round((seed**0.5) * 3.0, 2)) <= 2""","""Eliminate if the combo’s value is within 2 of 3×√seed""",33/311,keeper
 N015F538,ones,(0 <= seed <= 15) and (0 <= winner <= 15),Eliminate if the combination meets: 0 <= seed <= 15) and (0 <= winner <= 15),5/311,keeper
 NEWF725,ones,5 not in combo_digits and 8 not in combo_digits and 5 not in combo_digits,Eliminate if the combination meets: 5 not in combo_digits and 8 not in combo_digits and 5 not in combo_digits,57/311,keeper
-NO101F189,ones,not any(d in due_digits for d in combo_digits),Eliminate if the combination meets: not any(d in due_digits for d in combo_digits),104/311,keeper
+NO101F189,ones,not any(d in due_digits for d in combo_digits),"Eliminate if the combo does NOT contain any of the due digits (cuts combos that miss all due digits)",104/311,keeper
 NO101F316R,ones,abs(winner - seed) > 13,"Eliminate if the combination meets:if the absolute difference between the combo and the seed is greater than 13""",31/311,keeper
 NO110F721,ones,len(set(combo_digits) & set(seed_digits)) > 2,Eliminate if the combination shares 2 or more digits with the seed.,298/311,keeper
 NO118F322,ones,abs((max(combo_digits)-min(combo_digits)) - (max(seed_digits)-min(seed_digits)))>3,Eliminate if the spread difference between the combination and the seed is greater than 3.,13/311,keeper
