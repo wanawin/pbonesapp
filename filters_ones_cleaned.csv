@@ -125,7 +125,7 @@ filter_id,variant,expression,layman_explanation,stat,source
 2F636,ones,winner > 32,Eliminate if the combination meets: winner > 32,15/311,keeper
 2F657,ones,winner > 40,Eliminate if the combination meets: winner > 40,0/311,keeper
 2F679,ones,winner > 34,Eliminate if the combination meets: winner > 34,8/311,keeper
-31F323,ones,all(d>=5 for d in combo_digits),Eliminate if the combination meets: all(d>=5 for d in combo_digits),0/311,keeper
+31F323,ones,all(d >= 5 for d in combo_digits),"Eliminate if the combo’s digits are all 5 or higher",0/311,keeper
 32F339,ones,sum(1 for d in combo_digits if d in seed_digits)>=3 and winner<16 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits)>=3 and winner<16 and winner_structure == 5 and winner_structure == 5,9/311,keeper
 32F532,ones,(16 <= seed <= 24) and (34 <= winner <= 45),Eliminate if the combination meets: (16 <= seed <= 24) and (34 <= winner <= 45),8/311,keeper
 33F245,ones,"""any(set(range(n,n+4)).issubset(set(combo_digits)) for n in range(7))and winner_structure == 5 and winner_structure == 5""",Eliminate if the combination contains a run of 4 or more consecutive digits.,8/311,keeper
@@ -210,7 +210,7 @@ filter_id,variant,expression,layman_explanation,stat,source
 F723,ones,str(winner)[-1] == str(seed)[-1],Eliminate if the combination meets: the combo and the previous draw end with the same digit,22/311,keeper
 F724,ones,"""(((seed % 9) or 9) % 3 == 0) and (((seed % 9) or 9) // 3 in combo_digits)""","""Eliminate if adjusted seed mod 9 is divisible by 3 and that quotient digit appears in the combo""",83/311,keeper
 F725,ones,(winner % 9 or 9) == (seed % 9 or 9),"Eliminate if the combination meets: if the combo’s digital root (mod 9) equals the previous draw’s digital root""",35/311,keeper
-F726,ones,max(seed_digits) - min(seed_digits) == (winner % 9 or 9),Eliminate if the combination meets: max(seed_digits) - min(seed_digits) == (winner % 9 or 9,38/311,keeper
+F726,ones,max(seed_digits) - min(seed_digits) == (winner % 9 or 9),"Eliminate if the range between the highest and lowest seed digits equals the digital root of the combo (winner % 9 or 9)",38/311,keeper
 F727,ones,"abs(winner - round((seed**0.5) * 1.5, 2)) <= 2","""Eliminate if the combination meets: if the current number is within 2 of 1.5 times the square root of the seed """,3/311,keeper
 F728,ones,"abs(winner - round((seed**0.5) * 2.0, 2)) <= 2","""Eliminate if the combination meets: if the current number is within 2 of twice the square root of the seed""",10/311,keeper
 F729,ones,"abs(winner - round((seed**0.5) * 2.5, 2)) <= 2","""Eliminate if the combination meets: if the combo’s value is at most 2 away from 2.5×√seed""",14/311,keeper
@@ -252,7 +252,7 @@ NO467F354,ones,"""any(mirror.get(d,-1) in combo_digits for d in combo_digits""",
 NO4F225,ones,winner==37 and seed<30,Eliminate if the combination meets: the combo is 37 and the previous draw is less than 30,1/311,keeper
 NO55F290,ones,sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <38 and winner_structure == 5 and winner_structure == 5,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) >=4 and winner <38 and winner_structure == 5 and winner_structure == 5,31/311,keeper
 NO659F314,ones,abs(winner - seed) <=15,Eliminate if the combination meets:the combo is no more than 15 away from the previous draw,293/311,keeper
-NO67F317,ones,sum(int(d) for d in str(winner)) == sum(int(d) for d in str(seed)),Eliminate if the combination meets: sum(int(d) for d in str(winner)) == sum(int(d) for d in str(seed,34/311,keeper
+NO67F317,ones,sum(int(d) for d in str(winner)) == sum(int(d) for d in str(seed)),"Eliminate if the sum of the digits in the combo equals the sum of the digits in the seed",34/311,keeper
 NO69F314R,ones,abs(winner - seed) > 15,Eliminate if the combination meets: the combo is more than 15 away from the previous draw,18/311,keeper
 NO70F315R,ones,abs(winner - seed) > 14,Eliminate if the combination meets: the combo is more than 14 away from the previous draw,25/311,keeper
 NO78F720,ones,sum(1 for d in combo_digits if d in seed_digits) > 3,Eliminate if the combination meets: sum(1 for d in combo_digits if d in seed_digits) > 3,303/311,keeper
